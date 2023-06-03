@@ -1,4 +1,5 @@
 import React from 'react'
+import Categories from './screens/categories'
 
 function Home(props){
     return(
@@ -10,6 +11,7 @@ function Home(props){
                     </h3>
                 </div>
             </div>
+            <Categories/>
         </div>
     )
 }
