@@ -1,12 +1,13 @@
 import React, { useState,useEffect } from 'react'
 import { toast } from 'react-toastify'
 import axios from 'axios'
-import { useParams, NavLink} from 'react-router-dom'
+import { useParams, NavLink, useNavigate} from 'react-router-dom'
 
 const URL = "https://dummyjson.com"
 
 function Products(){
 
+    const navigate = useNavigate()
     const [products,setProducts] = useState([])
     const params = useParams()
     console.log("params =", params)
@@ -23,6 +24,18 @@ function Products(){
         getProducts()
     },[])
 
+    const deleteHandler = async (id) => {
+        if(window.confirm(`Are you sure you want delete  id= ${id} ?`)){
+            await axios.delete(`${URL}/products/${id}`)
+            .then(res=>{
+                toast.success(`products id ${id} deleted successfully`)
+                navigate(`/`)
+            }).catch(err => toast.error(err.message))
+        }else {
+            toast.warning('deleted terminated')
+        }
+    }
+
     return(
         <div className="container">
             <div className="row">
@@ -38,7 +51,7 @@ function Products(){
                     products && products.map((item,index) => {
                         const {id,title,thumbnail,price,images } = item 
                         return(
-                            <div className="col-md-4 mt-2 mb-2" key={index}>
+                            <div className="col-md-4 col-sm-4 col=lg-4 mt-2 mb-2" key={index}>
                                 <div className="card">
                                     <img src={thumbnail ? thumbnail : "#"} alt="no image" className="card-img-top" height={300} />
                                     <div className="card-body">
@@ -58,9 +71,9 @@ function Products(){
                                         <NavLink to={`/update/${id}`} className="btn btn-sm btn-info"> 
                                                 <i className="bi bi-pencil"></i>
                                         </NavLink>
-                                        <NavLink to={``} className="btn btn-sm btn-danger float-end">
+                                        <button onClick={() => deleteHandler(id)} className="btn btn-sm btn-danger float-end">
                                         <i className="bi bi-trash"></i>
-                                        </NavLink>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
